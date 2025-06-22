@@ -54,90 +54,95 @@ public class Server {
                     switch (cmd[0]) {
                         case "create" -> {
                             if (cmd.length < 3) { out.println("!! Invalid number of arguments"); return; }
-                            if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
-                            if (trees.containsKey(cmd[1])) { out.println("!! Tree with given name already exist"); return; }
-
-                            Tree<?> tree;
-                            switch (cmd[2]) {
-                                case "int" -> { tree = new Tree<Integer>("int"); }
-                                case "str" -> { tree = new Tree<String>("str"); }
-                                case "dbl" -> { tree = new Tree<Double>("dbl"); }
-                                default -> {
-                                    out.println("!! Unknown tree type.");
-                                    return;
+                            else if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
+                            else if (trees.containsKey(cmd[1])) { out.println("!! Tree with given name already exist"); return; }
+                            else {
+                                Tree<?> tree = null;
+                                switch (cmd[2]) {
+                                    case "int" -> { tree = new Tree<Integer>("int"); }
+                                    case "str" -> { tree = new Tree<String>("str"); }
+                                    case "dbl" -> { tree = new Tree<Double>("dbl"); }
+                                    default -> {
+                                        out.println("!! Unknown tree type.");
+                                    }
+                                }
+                                if (tree != null) {
+                                    trees.put(cmd[1], tree);
+        
+                                    line = "Created tree '" + cmd[1] + "' of type " + cmd[2];
+                                    out.println(">> " + line);
+                                    System.out.println(line);
                                 }
                             }
-                            trees.put(cmd[1], tree);
-
-                            line = "Created tree '" + cmd[1] + "' of type " + cmd[2];
-                            out.println(">> " + line);
-                            System.out.println(line);
                         }
 
                         case "search" -> {
-                            if (cmd.length < 3) { out.println("!! Invalid number of arguments"); return; }
-                            if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
-                            if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); return; }
-
-                            boolean result;
-                            switch (trees.get(cmd[1]).type) {
-                                case "int" -> { result = ((Tree<Integer>) trees.get(cmd[1])).contains(Integer.valueOf(cmd[2])); }
-                                case "str" -> { result = ((Tree<String>) trees.get(cmd[1])).contains(cmd[2]); }
-                                case "dbl" -> { result = ((Tree<Double>) trees.get(cmd[1])).contains(Double.valueOf(cmd[2])); }
-                                default -> {
-                                    out.println("!! Unknown tree type");
-                                    return;
+                            if (cmd.length < 3) { out.println("!! Invalid number of arguments"); }
+                            else if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); }
+                            else if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); }
+                            else {
+                                boolean result;
+                                switch (trees.get(cmd[1]).type) {
+                                    case "int" -> { result = ((Tree<Integer>) trees.get(cmd[1])).contains(Integer.valueOf(cmd[2])); }
+                                    case "str" -> { result = ((Tree<String>) trees.get(cmd[1])).contains(cmd[2]); }
+                                    case "dbl" -> { result = ((Tree<Double>) trees.get(cmd[1])).contains(Double.valueOf(cmd[2])); }
+                                    default -> {
+                                        out.println("!! Unknown tree type");
+                                        return;
+                                    }
                                 }
+    
+                                out.println("'" + cmd[1] + (result ? "' contains " : "' does not contain ") + cmd[2]);
                             }
-
-                            out.println("'" + cmd[1] + (result ? "' contains " : "' does not contain ") + cmd[2]);
                         }
 
                         case "insert" -> {
-                            if (cmd.length < 3) { out.println("!! Invalid number of arguments"); return; }
-                            if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
-                            if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); return; }
-
-                            switch (trees.get(cmd[1]).type) {
-                                case "int" -> { ((Tree<Integer>) trees.get(cmd[1])).insert(Integer.valueOf(cmd[2])); }
-                                case "str" -> { ((Tree<String>) trees.get(cmd[1])).insert(cmd[2]); }
-                                case "dbl" -> { ((Tree<Double>) trees.get(cmd[1])).insert(Double.valueOf(cmd[2])); }
-                                default -> {
-                                    out.println("!! Unknown tree type");
-                                    return;
+                            if (cmd.length < 3) { out.println("!! Invalid number of arguments"); }
+                            else if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); }
+                            else if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); }
+                            else  {
+                                switch (trees.get(cmd[1]).type) {
+                                    case "int" -> { ((Tree<Integer>) trees.get(cmd[1])).insert(Integer.valueOf(cmd[2])); }
+                                    case "str" -> { ((Tree<String>) trees.get(cmd[1])).insert(cmd[2]); }
+                                    case "dbl" -> { ((Tree<Double>) trees.get(cmd[1])).insert(Double.valueOf(cmd[2])); }
+                                    default -> {
+                                        out.println("!! Really bad error");
+                                        return;
+                                    }
                                 }
+    
+                                line = "Inserted " + cmd[2] + " into '" + cmd[1] + "'";
+                                out.println(">> " + line);
+                                System.out.println(line);
                             }
-
-                            line = "Inserted " + cmd[2] + " into '" + cmd[1] + "'";
-                            out.println(">> " + line);
-                            System.out.println(line);
                         }
 
                         case "delete" -> {
                             if (cmd.length < 3) { out.println("!! Invalid number of arguments"); return; }
-                            if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
-                            if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); return; }
-
-                            switch (trees.get(cmd[1]).type) {
-                                case "int" -> { ((Tree<Integer>) trees.get(cmd[1])).delete(Integer.valueOf(cmd[2])); }
-                                case "str" -> { ((Tree<String>) trees.get(cmd[1])).delete(cmd[2]); }
-                                case "dbl" -> { ((Tree<Double>) trees.get(cmd[1])).delete(Double.valueOf(cmd[2])); }
-                                default -> {
-                                    out.println("!! Unknown tree type");
-                                    return;
+                            else if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
+                            else if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); return; }
+                            else {
+                                switch (trees.get(cmd[1]).type) {
+                                    case "int" -> { ((Tree<Integer>) trees.get(cmd[1])).delete(Integer.valueOf(cmd[2])); }
+                                    case "str" -> { ((Tree<String>) trees.get(cmd[1])).delete(cmd[2]); }
+                                    case "dbl" -> { ((Tree<Double>) trees.get(cmd[1])).delete(Double.valueOf(cmd[2])); }
+                                    default -> {
+                                        out.println("!! Really bad error");
+                                        return;
+                                    }
                                 }
+    
+                                line = "Deleted " + cmd[2] + " from '" + cmd[1] + "'";
+                                out.println(">> " + line);
+                                System.out.println(line);
                             }
-
-                            line = "Deleted " + cmd[2] + " from '" + cmd[1] + "'";
-                            out.println(">> " + line);
-                            System.out.println(line);
                         }
 
                         case "draw" -> {
-                            if (cmd.length < 2) { out.println("!! Invalid number of arguments"); return; }
-                            if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); return; }
-                            if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); return; }
-                            out.println(trees.get(cmd[1]).draw());
+                            if (cmd.length < 2) { out.println("!! Invalid number of arguments"); }
+                            else if (cmd[1].length() == 0 ) { out.println("!! Must specity Tree name"); }
+                            else if (!trees.containsKey(cmd[1])) { out.println("!! Tree with given name does not exist"); }
+                            else { out.println(trees.get(cmd[1]).draw()); }
                         }
 
                         default -> { out.println("!! Unknown command"); }
@@ -146,7 +151,7 @@ public class Server {
                     out.println("!! Bad argument");
                 }
 
-                out.println("test");
+                out.println("eol");
             }
     
             socket.close();

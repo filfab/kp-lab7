@@ -112,16 +112,16 @@ public class Tree<T extends Comparable<T>> {
 
     public String draw() {
         if (root != null) {
-            return "(" + root.key + ")\n" + print(root.left, "") + print(root.right, "");
+            return "(" + root.key + ")\n" + print(root.left, "", "l") + print(root.right, "", "p");
         }
         return "";
     }
 
-    private String print(Node x, String prefix) {
+    private String print(Node x, String prefix, String side) {
         if (x != null) {
-            return prefix + "^---(" + x.key + ")\n"
-            + print(x.left, prefix + (x.p.right==null ? "    " : "|   "))
-            + print(x.right, prefix + (x.p.right==null ? "    " : "|   "));
+            return prefix + "^" + side + "---(" + x.key + ")\n"
+            + print(x.left, prefix + (x.p.right==null ? "     " : "|    "), "l")
+            + print(x.right, prefix + (x.p.right==null ? "     " : "|    "), "p");
         }
         return "";
     }

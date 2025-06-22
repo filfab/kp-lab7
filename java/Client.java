@@ -23,7 +23,7 @@ public class Client {
                 out.println(text);
 
                 while ((text=in.readLine()) != null) {
-                    if (text.equals("test")) { break; }
+                    if (text.equals("eol")) { break; }
                     System.out.println(text);
                 }
             }
